@@ -1,0 +1,41 @@
+<?php
+
+$url="https://www.youtube.com/watch?v=coRfQFg4wug&list=PLKnjBHu2xXNO3DAV2yEdLb3qewr9wBdpB";
+
+$response = file_get_contents($url);
+
+$dizi=array();
+$pattern='/v=(.*);list=(.*);index=(.*)/';
+preg_match_all($pattern, $response,$parcalanmis);
+
+foreach($parcalanmis[0] as $elemanlar){
+
+	
+$pattern='/v=(.*?)&/';
+preg_match_all($pattern, $elemanlar,$parcalanmis);
+array_push($dizi,$parcalanmis[1][0]);
+}
+ 
+unset($dizi[0],$dizi[1]);
+foreach($dizi as $ele){
+	
+	son($ele);
+}
+
+function son($vid){
+
+parse_str(file_get_contents("http://youtube.com/get_video_info?video_id=".$vid),$info); //decode file system
+$arr=(json_decode($info['player_response'],true));
+$url=$arr['streamingData']['formats'][1]['url'];
+$cozunurluk=$arr['streamingData']['formats'][1]['qualityLabel'];
+$title=$arr["videoDetails"]["title"];
+echo "<a href=".$url.">".$title."</a>";
+echo "<br>";
+
+}
+
+
+
+
+
+?>
